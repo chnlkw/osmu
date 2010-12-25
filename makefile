@@ -29,7 +29,7 @@ kernel.bin :	kernel.asm
 copy	:
 	-sudo mkdir -p $(MntPos)
 	-sudo mount -o loop -t msdos -o loop lkwix.img $(MntPos)
-	-sudo cp loader.bin dummy.txt ldr64.bin $(MntPos)
+	-sudo cp loader.bin ldr64.bin $(MntPos)
 	-sudo umount $(MntPos)
 	-sudo rm -rf $(MntPos)
 #	cp lkwix.img $(ShareFloder)
