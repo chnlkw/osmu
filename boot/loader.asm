@@ -203,22 +203,55 @@ align 64
 [bits 64]
 
 PM64start:
-	lgdt [gdtptr64]
+	mov rsp, StackTop
+	;lgdt [gdtptr64]
 	;mov rax, 122
 	;mul rax
-	mov cx, 0e00h + 'R'
-	mov [gs:100], cx
-	mov eax, 09740974h
+;	mov cx, 0e00h + 'R'
+;	mov [gs:100], cx
+;	mov eax, 09740974h
 ;	mov [gs:102], eax
-mov rbx, 0967096609650964h 
-mov [gs:104], rbx
-shl rbx, 32
-shr rbx, 32
+;mov rbx, 0967096609650964h 
+;mov [gs:104], rbx
+;shl rbx, 32
+;shr rbx, 32
 ;mov rax, 0
-mov [gs:112], rbx
+;mov [gs:112], rbx
 	
-	jmp $
+	call InitKernel
+	mov rbx, [KernelEntry]
 
+	jmp rbx
+
+InitKernel:
+	mov rbx, AddrOfKernelBin	
+	mov rax, [rbx + e_entry]
+	mov [KernelEntry], rax
+	mov rcx, [rbx + e_phnum]
+	and rcx, 0FFFFh
+	mov rax, [rbx + e_phoff ]
+	add rbx, rax
+
+.LoopInitKernel:
+	push rcx
+	mov rcx, [rbx + p_filesz]
+	mov rsi, [rbx + p_offset]
+	add rsi, AddrOfKernelBin
+	mov rdi, [rbx + p_vaddr]
+	rep cmpsb
+	pop rcx
+	add rbx, 56
+	loop .LoopInitKernel
+	
+	ret
+
+KernelEntry	dq	0
+e_entry	equ	0x18
+e_phoff	equ	0x20
+e_phnum equ 0x38
+p_offset	equ	0x8
+p_vaddr		equ 0x10
+p_filesz	equ 0x20
 
 _MemChkCnt:	dd 0
 _MemChkBuf:	times 256 db 0

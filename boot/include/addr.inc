@@ -2,13 +2,19 @@ StackTop			equ 7bFFh
 AddrOfBoot			equ	7c00h
 AddrOfFAT			equ	AddrOfBoot + 512
 BaseOfFAT			equ AddrOfFAT >> 4
+
 AddrOfRootDir		equ AddrOfFAT + 2 * 9 * 512
 BaseOfRootDir		equ AddrOfRootDir >> 4
+
+AddrOfKernelBin		equ 80000h
 BaseOfKernelBin		equ 8000h
 OffsetOfKernelBin	equ 0
+
 AddrOfLoader		equ 90000h
 BaseOfLoader		equ	AddrOfLoader >> 4
 OffsetOfLoader		equ 100h
+
+AddrOfKernel		equ 30000h 
 
 OffsetOfData		equ	31
 

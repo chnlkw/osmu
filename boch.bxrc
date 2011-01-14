@@ -10,7 +10,7 @@ megs: 64
 #vgaromimage: $BXSHARE/VGABIOS-elpin-2.40
 
 # what disk images will be used 
-floppya: 1_44=lkwix.img, status=inserted
+floppya: 1_44=osmu.img, status=inserted
 # floppyb: 1_44=floppyb.img, status=inserted
 
 # hard disk
