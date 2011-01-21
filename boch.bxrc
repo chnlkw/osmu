@@ -28,7 +28,7 @@ boot: a
 # other choices: win32 sdl wx carbon amigaos beos macintosh nogui rfb term
 
 # where do we send log messages?
-log: bochsout.txt
+#log: bochsout.txt
 
 # disable the mouse, since DLX is text only
 mouse: enabled=0

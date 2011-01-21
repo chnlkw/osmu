@@ -10,7 +10,7 @@ OBJ	=	kernel.o
 
 AddrOfKernel	=	0x30000
 
-vpath %	include/
+vpath %.inc	include/
 
 all	:	kernel.bin
 

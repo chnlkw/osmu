@@ -16,12 +16,13 @@ ${TARGET}	:	boot/boot.bin ${BuiltinFiles}
 
 makesubdir	:
 	${MAKE} -C boot
+	${MAKE} -C kernel
 
 .PHONY : clean debug
 clean	:
 	-rm ${TARGET}
 	${MAKE} clean -C boot
-
+	${MAKE} clean -C kernel
 debug	:
 	bochs -f boch.bxrc
 

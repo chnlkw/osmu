@@ -162,7 +162,6 @@ Prepare64:
 	mov eax, cr0
 	and eax, 07FFFFFFFh
 	mov cr0, eax
-	
 SetPML4E:	
 	mov edi, AddrOfPML4E
 	mov eax, AddrOfPDPTE | PG_P | PG_USU | PG_RWW
@@ -173,6 +172,7 @@ SetPML4E:
 	mov [edi], dword 0
 	loop .LoopPML
 
+;call DispEAX	
 SetPDPTE:
 	mov edi, AddrOfPDPTE
 ;	mov eax, 0 | PG_P | PG_USU | PG_RWW | PG_PS

@@ -204,19 +204,19 @@ align 64
 
 PM64start:
 	mov rsp, StackTop
-	;lgdt [gdtptr64]
-	;mov rax, 122
-	;mul rax
-;	mov cx, 0e00h + 'R'
-;	mov [gs:100], cx
-;	mov eax, 09740974h
-;	mov [gs:102], eax
-;mov rbx, 0967096609650964h 
-;mov [gs:104], rbx
-;shl rbx, 32
-;shr rbx, 32
-;mov rax, 0
-;mov [gs:112], rbx
+	lgdt [gdtptr64]
+	mov rax, 122
+	mul rax
+	mov cx, 0e00h + 'R'
+	mov [gs:100], cx
+	mov eax, 09740974h
+	mov [gs:102], eax
+mov rbx, 0967096609650964h 
+mov [gs:104], rbx
+shl rbx, 32
+shr rbx, 32
+mov rax, 0
+mov [gs:112], rbx
 	
 	call InitKernel
 	mov rbx, [KernelEntry]
@@ -238,7 +238,7 @@ InitKernel:
 	mov rsi, [rbx + p_offset]
 	add rsi, AddrOfKernelBin
 	mov rdi, [rbx + p_vaddr]
-	rep cmpsb
+	rep movsb
 	pop rcx
 	add rbx, 56
 	loop .LoopInitKernel
