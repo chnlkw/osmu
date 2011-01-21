@@ -183,10 +183,10 @@ SetPDPTE:
 	add edi, 4
 	mov [edi], dword 0
 	loop .LoopPDPTE
-
 SetPDE:
 	mov edi, AddrOfPDE
 	mov eax, [MemSize]
+	mov edx, 0
 	mov ebx, 200000h
 	div ebx
 	push eax
@@ -228,13 +228,8 @@ mov edi, 160*16+ 40
 	wrmsr
 ;CR0.PG=1
 	mov eax, cr0
-	;and eax,    1FFFFFFFh
 	or eax, 80000000h
-call DispEAX
 	mov cr0, eax
-call DispEAX
-mov eax, cr0
-call DispEAX
 	ret
 ;
 ;DEAD:jmp $

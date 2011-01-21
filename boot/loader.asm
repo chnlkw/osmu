@@ -116,7 +116,7 @@ Start:
 	shr eax, 16
 	mov [l_desc_idt + 4], al
 	mov [l_desc_idt + 7], ah
-	lidt [idtptr]
+;	lidt [idtptr]
 
 	in al, 92h
 	or al, 2
@@ -165,23 +165,23 @@ PMstart:
 	mov ss, ax
 	mov esp, StackTop
 	
-	mov ah, 2Eh
-	mov al, 'P'
-	mov edi, (80*3+39)*2
-	mov [gs:edi], ax
+;	mov ah, 2Eh
+;	mov al, 'P'
+;	mov edi, (80*3+39)*2
+;	mov [gs:edi], ax
 
-	call Init8259A
+;	call Init8259A
 	call DispMemInfo
-	call SetupPaging
+;	call SetupPaging
 
 ;Install TSS
-	mov eax, LABEL_TSS
-	mov [l_desc_tss + 2], ax
-	shr eax, 16
-	mov [l_desc_tss + 4], al
-	mov [l_desc_tss + 7], ah
-	mov ax, SelectorTSS
-	ltr ax
+;	mov eax, LABEL_TSS
+;	mov [l_desc_tss + 2], ax
+;	shr eax, 16
+;	mov [l_desc_tss + 4], al
+;	mov [l_desc_tss + 7], ah
+;	mov ax, SelectorTSS
+;	ltr ax
 	
 mov edi, 160*13+40
 	call Prepare64
@@ -203,20 +203,20 @@ align 64
 [bits 64]
 
 PM64start:
-	mov rsp, StackTop
-	lgdt [gdtptr64]
-	mov rax, 122
-	mul rax
-	mov cx, 0e00h + 'R'
-	mov [gs:100], cx
-	mov eax, 09740974h
-	mov [gs:102], eax
-mov rbx, 0967096609650964h 
-mov [gs:104], rbx
-shl rbx, 32
-shr rbx, 32
-mov rax, 0
-mov [gs:112], rbx
+;	mov rsp, StackTop
+;	lgdt [gdtptr64]
+;	mov rax, 122
+;	mul rax
+;	mov cx, 0e00h + 'R'
+;	mov [gs:100], cx
+;	mov eax, 09740974h
+;	mov [gs:102], eax
+;mov rbx, 0967096609650964h 
+;mov [gs:104], rbx
+;shl rbx, 32
+;shr rbx, 32
+;mov rax, 0
+;mov [gs:112], rbx
 	
 	call InitKernel
 	mov rbx, [KernelEntry]
