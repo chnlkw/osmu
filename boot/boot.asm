@@ -4,7 +4,6 @@ org AddrOfBoot
 	jmp short Start
 %include "fat12head.inc"
 
-
 Start:
 	mov ax, cs
 	mov ds, ax

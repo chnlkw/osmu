@@ -18,8 +18,6 @@ l_desc_stack:	Descriptor 0, StackTop, DA_DRWA + DA_32
 gdtlen		equ	$ - l_gdt
 gdtptr		dw	gdtlen
 			dd	l_gdt
-gdtptr64	dw	gdtlen
-			dq	l_gdt
 
 SelectorRW		equ l_desc_flat_rw - l_gdt
 SelectorC		equ	l_desc_flat_c - l_gdt
@@ -137,16 +135,11 @@ PMstart:
 	mov ss, ax
 	mov esp, StackTop
 	
-;	call Init8259A
 	call DispMemInfo
-;	call SetupPaging
 
-mov edi, 160*13+40
 	call Prepare64
 	jmp SelectorC64:(PM64start)
 
-
-;jmp PM64start
 [section .s64]
 
 align 64
