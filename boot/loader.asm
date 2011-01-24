@@ -30,25 +30,6 @@ SelectorC64		equ	l_desc_flat_c64 - l_gdt
 SelectorVideo	equ l_desc_video - l_gdt + SA_RPL3
 SelectorTSS		equ l_desc_tss - l_gdt
 SelectorStack	equ l_desc_stack - l_gdt
-SelectorIDT		equ l_desc_idt - l_gdt
-
-[section .idt]
-align 32
-[bits 32]
-LABEL_IDT:
-%rep 128
-	Gate SelectorIDT, SystemHandler, 0, DA_386IGate
-%endrep
-idtlen	equ $ - LABEL_IDT
-idtptr	dw	idtlen - 1
-		dd	LABEL_IDT	
-
-_SystemHandler:
-SystemHandler equ _SystemHandler - $$
-	mov ah, 0ch
-	mov al, '!'
-	mov [gs:0], ax
-	jmp $
 
 [section .16]
 align 32
@@ -111,12 +92,6 @@ Start:
 	
 	lgdt [gdtptr]
 	cli
-	mov eax, LABEL_IDT
-	mov [l_desc_idt + 2], ax
-	shr eax, 16
-	mov [l_desc_idt + 4], al
-	mov [l_desc_idt + 7], ah
-;	lidt [idtptr]
 
 	in al, 92h
 	or al, 2
