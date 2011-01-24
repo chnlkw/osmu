@@ -13,9 +13,7 @@ l_desc_flat_c:		Descriptor 0, 0FFFFFh, DA_CR|DA_32|DA_LIMIT_4K
 l_desc_flat_rw64:	Descriptor 0, 0FFFFFh, DA_DRW|DA_64|DA_LIMIT_4K
 l_desc_flat_c64:	Descriptor 0, 0FFFFFh, DA_CR|DA_64|DA_LIMIT_4K
 l_desc_video:		Descriptor 0B8000h, 0ffffh, DA_DRW|DA_DPL3
-l_desc_tss:			Descriptor 0, TSSLen - 1, DA_386TSS
 l_desc_stack:	Descriptor 0, StackTop, DA_DRWA + DA_32
-l_desc_idt:		Descriptor 0,0FFFFFh, DA_CR|DA_32|DA_LIMIT_4K
 
 gdtlen		equ	$ - l_gdt
 gdtptr		dw	gdtlen
@@ -28,7 +26,6 @@ SelectorC		equ	l_desc_flat_c - l_gdt
 SelectorRW64	equ l_desc_flat_rw64 - l_gdt
 SelectorC64		equ	l_desc_flat_c64 - l_gdt
 SelectorVideo	equ l_desc_video - l_gdt + SA_RPL3
-SelectorTSS		equ l_desc_tss - l_gdt
 SelectorStack	equ l_desc_stack - l_gdt
 
 [section .16]
@@ -140,34 +137,13 @@ PMstart:
 	mov ss, ax
 	mov esp, StackTop
 	
-;	mov ah, 2Eh
-;	mov al, 'P'
-;	mov edi, (80*3+39)*2
-;	mov [gs:edi], ax
-
 ;	call Init8259A
 	call DispMemInfo
 ;	call SetupPaging
 
-;Install TSS
-;	mov eax, LABEL_TSS
-;	mov [l_desc_tss + 2], ax
-;	shr eax, 16
-;	mov [l_desc_tss + 4], al
-;	mov [l_desc_tss + 7], ah
-;	mov ax, SelectorTSS
-;	ltr ax
-	
 mov edi, 160*13+40
 	call Prepare64
-;mov eax, 0FFFFFFFFh
-;mov ecx, 0c0000080h
-;rdmsr 
-;	jmp SelectorC:(PM64start-256)
 	jmp SelectorC64:(PM64start)
-db 0xEA 
-dd PM64start 
-dw SelectorC64
 
 
 ;jmp PM64start
@@ -178,21 +154,6 @@ align 64
 [bits 64]
 
 PM64start:
-;	mov rsp, StackTop
-;	lgdt [gdtptr64]
-;	mov rax, 122
-;	mul rax
-;	mov cx, 0e00h + 'R'
-;	mov [gs:100], cx
-;	mov eax, 09740974h
-;	mov [gs:102], eax
-;mov rbx, 0967096609650964h 
-;mov [gs:104], rbx
-;shl rbx, 32
-;shr rbx, 32
-;mov rax, 0
-;mov [gs:112], rbx
-	
 	call InitKernel
 	mov rbx, [KernelEntry]
 
@@ -234,39 +195,4 @@ _MemSize:	dw 0
 MemChkCnt 	equ _MemChkCnt
 MemChkBuf	equ _MemChkBuf
 MemSize		equ _MemSize
-
-[section .tss]
-align 32
-[bits 32]
-LABEL_TSS:
-	DD	0			; Back
-	DD	StackTop	; 0 级堆栈
-	DD	SelectorStack	; 
-	DD	0			; 1 级堆栈
-	DD	0			; 
-	DD	0			; 2 级堆栈
-	DD	0			; 
-	DD	0			; CR3
-	DD	0			; EIP
-	DD	0			; EFLAGS
-	DD	0			; EAX
-	DD	0			; ECX
-	DD	0			; EDX
-	DD	0			; EBX
-	DD	0			; ESP
-	DD	0			; EBP
-	DD	0			; ESI
-	DD	0			; EDI
-	DD	0			; ES
-	DD	0			; CS
-	DD	0			; SS
-	DD	0			; DS
-	DD	0			; FS
-	DD	0			; GS
-	DD	0			; LDT
-	DW	0			; 调试陷阱标志
-	DW	$ - LABEL_TSS + 2	; I/O位图基址
-	DB	0ffh			; I/O位图结束标志
-	TSSLen	equ	$ - LABEL_TSS
-
 
