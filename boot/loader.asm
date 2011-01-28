@@ -19,6 +19,11 @@ gdtlen		equ	$ - l_gdt
 gdtptr		dw	gdtlen
 			dd	l_gdt
 
+
+gdtptr64	dw gdtlen - 8
+			dq l_gdt
+
+
 SelectorRW		equ l_desc_flat_rw - l_gdt
 SelectorC		equ	l_desc_flat_c - l_gdt
 SelectorRW64	equ l_desc_flat_rw64 - l_gdt
@@ -147,6 +152,7 @@ align 64
 [bits 64]
 
 PM64start:
+lgdt [gdtptr64]
 	call InitKernel
 	mov rbx, [KernelEntry]
 
