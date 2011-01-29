@@ -2,7 +2,7 @@
 
 %define K_STACK_BYTES 1024
 
-extern init_gdt
+extern cstart
 extern gdt_ptr
 
 global _start
@@ -18,7 +18,8 @@ _start:
 	mov al, 'K'
 	mov [gs:((80*22+39)*2)], ax
 
-	call init_gdt
+	call cstart
+
 	lgdt [gdt_ptr]
 
 	jmp $

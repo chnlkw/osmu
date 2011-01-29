@@ -9,7 +9,7 @@ CFLAGS	=	-I ../include/ -c
 LDFLAGS	=	-s -z max-page-size=0x1000
 
 TARGET	=	kernel.bin
-OBJ	=	kernel.o start.o protect64.o
+OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o
 
 AddrOfKernel	=	0x30000
 
@@ -29,6 +29,8 @@ protect64.inc:	protect64.h
 	sed protect64.h -e 's/^#/%/' > protect64.inc
 
 protect64.o	:	type.h
+
+i8259.o		:	type.h asmlib.h
 
 clean :
 	-rm ${OBJ} ${TARGET}
