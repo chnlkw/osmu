@@ -1,5 +1,4 @@
 #include "type.h"
-#include "asmlib.h"
 
 #define INT_M_CTL		0x20
 #define INT_M_CTLMASK	0x21

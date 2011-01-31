@@ -5,4 +5,5 @@ void cstart()
 {
 	init_gdt();
 	init_8259A();
+	disp_str("cstart finished\nYES");
 }
