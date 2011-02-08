@@ -4,12 +4,12 @@ AS		=	nasm
 ASFLAGS	=	-f elf64 -I ../include/
 
 CC		=	gcc
-CFLAGS	=	-I ../include/ -c
+CFLAGS	=	-I ../include/ -c -fno-builtin -fno-stack-protector
 
 LDFLAGS	=	-s -z max-page-size=0x1000
 
 TARGET	=	kernel.bin
-OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o
+OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o
 
 AddrOfKernel	=	0x30000
 
@@ -26,11 +26,13 @@ kernel.o	:	kernel.s protect64.inc
 start.o		:	type.h protect64.h
 
 protect64.inc:	protect64.h
-	sed protect64.h -e 's/^#/%/' > protect64.inc
+	sed protect64.h -e 's/^#/%/' | grep % > protect64.inc
 
 protect64.o	:	type.h
 
 i8259.o		:	type.h asmlib.h
+
+clib.o		:	type.h
 
 clean :
 	-rm ${OBJ} ${TARGET}

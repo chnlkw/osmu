@@ -47,6 +47,7 @@ disp_str:
 	div ebx
 	inc eax
 	mul ebx
+	mov ebx, eax
 	inc edi
 	jmp .disp_str_loop
 .disp_str_end:
