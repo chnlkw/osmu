@@ -21,13 +21,12 @@ void itoa(char *str, t_64 num)
 	}
 	if(!flag)
 		*p++='0';
-	*p++=' ';
 	*p='\0';
 }
 
 void disp_int(t_64 num)
 {
-	char str[100];
+	char str[20];
 	itoa(str, num);
 	disp_str(str);
 }

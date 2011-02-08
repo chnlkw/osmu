@@ -4,8 +4,6 @@ global disp_str
 
 %define disp_line 160
 
-global disp_pos
-
 disp_pos	dd	0
 
 in_byte:

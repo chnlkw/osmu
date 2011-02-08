@@ -5,6 +5,24 @@ struct	descriptor	gdt[GDT_SIZE];
 struct	gate		idt[IDT_SIZE];
 
 void divide_error();
+void single_step_exception();
+void nmi();
+void breakpoint_exception();
+void overflow();
+void bounds_check();
+void inval_opcode();
+void copr_not_available();
+void double_fault();
+void copr_seg_overrun();
+void inval_tss();
+void segment_not_present();
+void stack_exception();
+void general_protection();
+void page_fault();
+void copr_error();
+void align_fault();
+void machine_abort();
+void simd_fault();
 
 desc_ptr gdt_ptr;
 desc_ptr idt_ptr;
@@ -44,17 +62,67 @@ void init_idt()
 	int i;
 	idt_ptr[0]=sizeof idt;
 	*(t_64*)(idt_ptr+1)=(t_64)&idt;
-	for(i=0;i<32;i++)
-	{
-		init_gate(i, divide_error, PRIVILEGE_KRNL);
-	}
+	init_gate(INT_VECTOR_DIVIDE,		divide_error,		PRIVILEGE_KRNL); 
+	init_gate(INT_VECTOR_DEBUG,		single_step_exception,	PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_NMI,		nmi,			PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_BREAKPOINT,	breakpoint_exception,	PRIVILEGE_USER);
+	init_gate(INT_VECTOR_OVERFLOW,		overflow,		PRIVILEGE_USER);
+	init_gate(INT_VECTOR_BOUNDS,		bounds_check,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_INVAL_OP,		inval_opcode,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_COPROC_NOT,	copr_not_available,	PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_DOUBLE_FAULT,	double_fault,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_COPROC_SEG,	copr_seg_overrun,	PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_INVAL_TSS,		inval_tss,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_SEG_NOT,		segment_not_present,	PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_STACK_FAULT,	stack_exception,	PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_PROTECTION,	general_protection,	PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_PAGE_FAULT,	page_fault,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_COPROC_ERR,	copr_error,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_ALIGN_FAULT,	align_fault,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_MACHINE_NOT,	machine_abort,		PRIVILEGE_KRNL);
+	init_gate(INT_VECTOR_SIMD_FAULT	,	simd_fault,		PRIVILEGE_KRNL);
 }
 
-char err_string[][32]={
-	"Divide error"
-};
-
-void exception_handler(t_64 vector_no, t_64 rev1, t_64 rev2, t_64 rev3, t_64 rev4, t_64 rev5, t_64 err_code, t_64 rip, t_64 cs, t_64 rflags, t_64 rsp, t_64 ss)
+void exception_handler(t_64 vector_no, t_64 err_code, t_64 rev1, t_64 rev2, t_64 rev3, t_64 rev4, t_64 rip, t_64 cs, t_64 rflags, t_64 rsp, t_64 ss)
 {
+	char err_string[][64]={
+		"#DE Divide Error",
+		"#DB RESERVED",
+		"―  NMI Interrupt",
+		"#BP Breakpoint",
+		"#OF Overflow",
+		"#BR BOUND Range Exceeded",
+		"#UD Invalid Opcode (Undefined Opcode)",
+		"#NM Device Not Available (No Math Coprocessor)",
+		"#DF Double Fault",
+		"    Coprocessor Segment Overrun (reserved)",
+		"#TS Invalid TSS",
+		"#NP Segment Not Present",
+		"#SS Stack-Segment Fault",
+		"#GP General Protection",
+		"#PF Page Fault",
+		"―  (Intel reserved. Do not use.)",
+		"#MF x87 FPU Floating-Point Error (Math Fault)",
+		"#AC Alignment Check",
+		"#MC Machine Check",
+		"#XF SIMD Floating-Point Exception"
+	};
+
 	disp_str(err_string[vector_no]);
+	disp_str("\n");
+	if(err_code!=NON_ERR_CODE)
+	{
+		disp_str("ERROR CODE:");
+		disp_int(err_code);
+	}
+	disp_str("  CS:RIP=");
+	disp_int(cs);
+	disp_str(":");
+	disp_int(rip);
+	disp_str("  SS:RSP=");
+	disp_int(ss);
+	disp_str(":");
+	disp_int(rsp);
+	disp_str("  RFLAGS:");
+	disp_int(rflags);
 }
