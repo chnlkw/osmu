@@ -8,10 +8,10 @@ jmp Start
 %include "pm.inc"
 [section .gdt]
 l_gdt:			Descriptor 0, 0, 0
-l_desc_flat_rw:		Descriptor 0, 0FFFFFh, DA_DRW|DA_32|DA_LIMIT_4K
 l_desc_flat_c:		Descriptor 0, 0FFFFFh, DA_CR|DA_32|DA_LIMIT_4K
-l_desc_flat_rw64:	Descriptor 0, 0FFFFFh, DA_DRW|DA_64|DA_LIMIT_4K
+l_desc_flat_rw:		Descriptor 0, 0FFFFFh, DA_DRW|DA_32|DA_LIMIT_4K
 l_desc_flat_c64:	Descriptor 0, 0FFFFFh, DA_CR|DA_64|DA_LIMIT_4K
+l_desc_flat_rw64:	Descriptor 0, 0FFFFFh, DA_DRW|DA_64|DA_LIMIT_4K
 l_desc_video:		Descriptor 0B8000h, 0ffffh, DA_DRW|DA_DPL3
 l_desc_stack:	Descriptor 0, StackTop, DA_DRWA + DA_32
 
@@ -35,6 +35,7 @@ SelectorStack	equ l_desc_stack - l_gdt
 align 32
 [bits 16]
 Start:
+
 	mov ax, cs
 	mov ds, ax
 	mov es, ax
@@ -143,6 +144,8 @@ PMstart:
 	call DispMemInfo
 
 	call Prepare64
+	mov ax, SelectorRW64
+	mov ss, ax
 	jmp SelectorC64:(PM64start)
 
 [section .s64]
@@ -152,7 +155,9 @@ align 64
 [bits 64]
 
 PM64start:
-lgdt [gdtptr64]
+
+
+;lgdt [gdtptr64]
 	call InitKernel
 	mov rbx, [KernelEntry]
 

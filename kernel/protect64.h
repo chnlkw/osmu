@@ -2,12 +2,16 @@
 
 #define PROTECT_64_H
 
-#define CS_INDEX 1
-#define DS_INDEX 2
-#define GS_INDEX 3
-#define GDT_SIZE 4
+#define	CS_INDEX	1
+#define	DS_INDEX	2
+#define	GS_INDEX	3
+#define	TSS_INDEX	4
+#define	GDT_SIZE	5
 
-#define SELECTOR_C	0x10
+#define SELECTOR_CS	0x10
+#define SELECTOR_DS	0x20
+#define SELECTOR_GS	0x30
+#define SELECTOR_TSS	0x40
 
 #define	INT_VECTOR_DIVIDE	0
 #define	INT_VECTOR_DEBUG	1
@@ -34,10 +38,14 @@
 
 #define IDT_SIZE 256
 
+#define	DESC_LIMIT_G	0x80
+
 #define DESC_CODE_ACCESS 0x98
 #define DESC_CODE_64 0x20	
 
-#define DESC_DATA_ACCESS 0x90
+#define DESC_DATA_ACCESS 0x92
+
+#define DESC_TSS_ACCESS 0x89
 
 #define GATE_ACCESS	0x8E00
 
@@ -45,6 +53,10 @@
 
 #define PRIVILEGE_KRNL	0
 #define PRIVILEGE_USER	3
+
+#define ADDR_RSP0 0x200FFF
+#define ADDR_RSP1 0x201FFF
+#define ADDR_RSP2 0x202FFF
 
 struct descriptor
 {
@@ -70,5 +82,23 @@ struct gate
 
 typedef t_16 desc_ptr[5];
 
+struct TSS
+{
+	t_32	rev1;
+	t_64	rsp0;
+	t_64	rsp1;
+	t_64	rsp2;
+	t_64	rev2;
+	t_64	ist1;
+	t_64	ist2;
+	t_64	ist3;
+	t_64	ist4;
+	t_64	ist5;
+	t_64	ist6;
+	t_64	ist7;
+	t_64	rev3;
+	t_16	rev4;
+	t_16	iomap;
+};
 
 #endif

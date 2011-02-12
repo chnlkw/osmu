@@ -6,6 +6,7 @@ extern cstart
 extern gdt_ptr
 extern idt_ptr
 extern exception_handler
+extern spurious_irq
 
 global _start
 global divide_error
@@ -38,17 +39,31 @@ _start:
 	mov ah, 0Fh
 	mov al, 'K'
 	mov [gs:((80*22+39)*2)], ax
-
 	call cstart
 
 	lgdt [gdt_ptr]
 	lidt [idt_ptr]
-
-ud2
-	mov rbx, 0
-	div rbx
-
-	jmp $
+	mov ax, SELECTOR_TSS 
+	ltr ax
+	mov ax, SELECTOR_DS
+	mov ds, ax
+	mov es, ax
+	push SELECTOR_DS
+	push StackTop
+	pushf
+	push SELECTOR_CS
+	push cs_init
+	iretq
+cs_init:
+	sti
+	nop
+	nop
+	nop
+	nop
+_hlt:	hlt
+	nop
+	nop
+	jmp _hlt
 
 ;exception handelers
 
@@ -93,6 +108,8 @@ copr_not_available:
 	jmp exception
 
 double_fault:
+nop
+;iretq
 	mov rdi, 8
 	pop rsi
 	jmp	exception
@@ -149,7 +166,33 @@ simd_fault:
 
 exception:
 	call exception_handler
+	jmp $
+
+
+%macro hwint 1
+global hwint%1
+hwint%1:
+	mov rdi, %1
+	call spurious_irq
 	hlt
+%endmacro
+
+hwint 0
+hwint 1
+hwint 2
+hwint 3
+hwint 4
+hwint 5
+hwint 6
+hwint 7
+hwint 8
+hwint 9
+hwint 10
+hwint 11
+hwint 12
+hwint 13
+hwint 14
+hwint 15
 
 [section .bss]
 	resb K_STACK_BYTES

@@ -28,9 +28,9 @@ start.o		:	type.h protect64.h
 protect64.inc:	protect64.h
 	sed protect64.h -e 's/^#/%/' | grep % > protect64.inc
 
-protect64.o	:	type.h
+protect64.o	:	type.h protect64.h
 
-i8259.o		:	type.h asmlib.h
+i8259.o		:	type.h asmlib.h i8259.h
 
 clib.o		:	type.h
 
