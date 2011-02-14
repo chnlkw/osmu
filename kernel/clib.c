@@ -30,3 +30,12 @@ void disp_int(t_64 num)
 	itoa(str, num);
 	disp_str(str);
 }
+
+void delay(t_64 t)
+{
+	int i;
+	while(t-->0)
+	{
+		for(i=0;i<1000000;i++);
+	}
+}

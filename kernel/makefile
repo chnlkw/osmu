@@ -1,19 +1,19 @@
 #Makefile for Kernel
 
-AS		=	nasm
-ASFLAGS	=	-f elf64 -I ../include/
+AS	=	nasm
+ASFLAGS	=	-f elf64
 
-CC		=	gcc
-CFLAGS	=	-I ../include/ -c -fno-builtin -fno-stack-protector
+CC	=	gcc
+CFLAGS	=	-c -fno-builtin -fno-stack-protector
 
 LDFLAGS	=	-s -z max-page-size=0x1000
 
 TARGET	=	kernel.bin
-OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o
+OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o main.o
 
 AddrOfKernel	=	0x30000
 
-vpath %.h	../include/
+#vpath %.h	../include/
 
 all	:	kernel.bin
 
@@ -21,18 +21,20 @@ kernel.bin	:	${OBJ}
 	ld ${LDFLAGS} -Ttext-segment=${AddrOfKernel} -o $@ ${OBJ} 
 
 kernel.o	:	kernel.s protect64.inc
-#	nasm ${ASMFLAGS} -o $@ $<
-
-start.o		:	type.h protect64.h
 
 protect64.inc:	protect64.h
 	sed protect64.h -e 's/^#/%/' | grep % > protect64.inc
 
-protect64.o	:	type.h protect64.h
+clib.o		: clib.c type.h
 
-i8259.o		:	type.h asmlib.h i8259.h
+i8259.o		: i8259.c type.h i8259.h asmlib.h
 
-clib.o		:	type.h
+main.o		: main.c type.h proc.h protect64.h global.h const.h
+
+protect64.o	: protect64.c type.h i8259.h protect64.h global.h const.h proc.h
+
+start.o		: start.c type.h protect64.h
+
 
 clean :
 	-rm ${OBJ} ${TARGET}
