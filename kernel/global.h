@@ -1,10 +1,11 @@
-#include "const.h"
-#include "protect64.h"
 #include "proc.h"
+#include "protect64.h"
 
-#ifndef _KERNEL_GLOBEL_H_
+#ifndef _GLOBAL_H_
 
-#define _KERNEL_GLOBEL_H_
+#define _GLOBAL_H_
+
+#ifdef GLOBAL_VARIABLES_HERE
 
 #define EXTERN
 
@@ -20,7 +21,10 @@ EXTERN	TSS		tss;
 
 EXTERN	PROCESS	proc_table[NR_TASKS];
 
-EXTERN	t_8	task_stack[TASK_STACK_SIZE];
+EXTERN	t_8	task_stack[STACK_SIZE_TOTAL];
 
 EXTERN	t_64	p_proc_ready;
 
+extern	TASK	task_table[NR_TASKS];
+
+#endif

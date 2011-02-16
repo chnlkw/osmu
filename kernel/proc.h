@@ -38,4 +38,21 @@ typedef struct s_proc
 	DESCRIPTOR	ldt[LDT_SIZE];
 }PROCESS;
 
+typedef struct s_task
+{
+	void	*entry;
+	t_64	stack_size;
+}TASK;
+
+void proc_A();
+void proc_B();
+
+#define	NR_TASKS 2
+
+#define	STACK_SIZE_PROCA	0x8000
+#define	STACK_SIZE_PROCB	0x8000
+
+#define	STACK_SIZE_TOTAL	(STACK_SIZE_PROCA + \
+				 STACK_SIZE_PROCB)
+
 #endif

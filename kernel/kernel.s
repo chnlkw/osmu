@@ -207,6 +207,8 @@ simd_fault:
 	jmp exception
 
 exception:
+	mov ax, SELECTOR_GS
+	mov gs, ax
 	call exception_handler
 	jmp $
 

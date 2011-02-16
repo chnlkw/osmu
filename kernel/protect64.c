@@ -50,7 +50,7 @@ void init_CS(DESCRIPTOR *desc, int priv)
 
 void init_DS(DESCRIPTOR *desc, t_64 base)
 {
-	desc->access = DESC_DATA_ACCESS | (3 << DPL_SHIFT);
+	desc->access = DESC_DATA_ACCESS | (3 << DPL_SHIFT); //Page Access Only
 	desc->base_1 = base & 0xFFFF;
 	desc->base_2 = (base >> 16) & 0xFF;
 	desc->base_3 = (base >> 24) & 0xFF;

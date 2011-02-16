@@ -7,7 +7,7 @@
 #define LDT_SIZE	3
 #define	TSS_INDEX	3
 #define LDT_INDEX	4
-#define	GDT_SIZE	5
+#define	GDT_SIZE	6
 
 #define SELECTOR_CS	0x10
 #define SELECTOR_DS	0x0
