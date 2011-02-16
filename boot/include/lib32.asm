@@ -72,7 +72,7 @@ Prepare64:
 	;mov cr0, eax
 SetPML4E:	
 	mov edi, AddrOfPML4E
-	mov eax, AddrOfPDPTE | PG_P | PG_USU | PG_RWW
+	mov eax, AddrOfPDPTE | PG_P | PG_USS | PG_RWR
 	mov [edi], eax
 	mov ecx, 1023
 .LoopPML:
@@ -82,7 +82,7 @@ SetPML4E:
 
 SetPDPTE:
 	mov edi, AddrOfPDPTE
-	mov eax, AddrOfPDE | PG_P | PG_USU | PG_RWW
+	mov eax, AddrOfPDE | PG_P | PG_USS | PG_RWR
 	mov [edi], eax
 	mov ecx, 1023
 .LoopPDPTE:
@@ -97,7 +97,7 @@ SetPDE:
 	div ebx
 	push eax
 	mov ecx, eax
-	mov eax, AddrOfPTE | PG_P | PG_USU | PG_RWW
+	mov eax, AddrOfPTE | PG_P | PG_USS | PG_RWR
 .LoopPDE:
 	stosd
 	add eax, 4096
@@ -111,7 +111,7 @@ SetPTE:
 	mul ebx
 	mov ecx, eax
 	mov edi, AddrOfPTE
-	mov eax,0 | PG_P | PG_USU | PG_RWW
+	mov eax,0 | PG_P | PG_USS | PG_RWR
 .LoopPTE:
 	stosd
 	add eax, 4096

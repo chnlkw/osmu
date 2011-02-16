@@ -9,6 +9,8 @@ extern	idt_ptr
 extern	exception_handler
 extern	spurious_irq
 extern	p_proc_ready
+extern	disp_int
+extern	disp_str
 
 global	_start
 global	restart
@@ -48,6 +50,7 @@ global	hwint13
 global	hwint14
 global	hwint15
 
+REGS_TOP	equ	23*8
 
 [bits 64]
 
@@ -104,6 +107,7 @@ restart:
 	pop	fs
 	pop	gs
 	iretq
+
 	
 ;exception handelers
 
@@ -207,7 +211,6 @@ exception:
 	jmp $
 
 
-
 %macro	hwint_master	1
 	mov	rdi, %1
 	call	spurious_irq
@@ -217,11 +220,72 @@ exception:
 
 ALIGN	16
 hwint00:		; Interrupt routine for irq 0 (the clock).
+	mov rsp, [p_proc_ready]
+	add rsp, REGS_TOP - 5*8
+	push gs
+	push fs
+	push r15
+	push r14
+	push r13
+	push r12
+	push r11
+	push r10
+	push r9
+	push r8
+	push rdi
+	push rsi
+	push rbp
+	push rdx
+	push rcx
+	push rbx
+	push rax
+
+	lea rsp, [ADDR_IST2 - 5*8]
+	pop r14
+	pop r13
+	pop r12
+	pop r11
+	pop r10
+	mov rsp, [p_proc_ready]
+	add rsp, REGS_TOP
+	push r10
+	push r11
+	push r12
+	push r13
+	push r14
+
+	mov rsp, ADDR_IST2
+
 	mov ax, [gs:158]
 	inc ah
 	mov [gs:158], ax
+	
+	mov rdi, clock_int_msg
+	call disp_str
+
 	mov al, 0x20
 	out 0x20, al
+
+	mov	rsp, [p_proc_ready]	
+	pop	rax
+	lldt	ax
+	pop	rax
+	pop	rbx
+	pop	rcx
+	pop	rdx
+	pop	rbp
+	pop	rsi
+	pop	rdi
+	pop	r8
+	pop	r9
+	pop	r10
+	pop	r11
+	pop	r12
+	pop	r13
+	pop	r14
+	pop	r15
+	pop	fs
+	pop	gs
 	iretq
 
 ALIGN	16
@@ -293,6 +357,8 @@ ALIGN	16
 hwint15:		; Interrupt routine for irq 15
 	hwint_slave	15
 
+[section .data]
+	clock_int_msg	db '^', 0
 
 [section .bss]
 	resb K_STACK_BYTES

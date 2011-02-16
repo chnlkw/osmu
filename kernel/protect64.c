@@ -50,7 +50,7 @@ void init_CS(DESCRIPTOR *desc, int priv)
 
 void init_DS(DESCRIPTOR *desc, t_64 base)
 {
-	desc->access = DESC_DATA_ACCESS;
+	desc->access = DESC_DATA_ACCESS | (3 << DPL_SHIFT);
 	desc->base_1 = base & 0xFFFF;
 	desc->base_2 = (base >> 16) & 0xFF;
 	desc->base_3 = (base >> 24) & 0xFF;
@@ -123,7 +123,7 @@ void init_idt()
 	init_gate(INT_VECTOR_SIMD_FAULT	,	simd_fault,		PRIVILEGE_KRNL, 1);
 
 
-	init_gate(INT_VECTOR_IRQ0 + 0,	hwint00,	PRIVILEGE_KRNL, 7);
+	init_gate(INT_VECTOR_IRQ0 + 0,	hwint00,	PRIVILEGE_KRNL, 2);
 	init_gate(INT_VECTOR_IRQ0 + 1,	hwint01,	PRIVILEGE_KRNL, 7);
 	init_gate(INT_VECTOR_IRQ0 + 2,	hwint02,	PRIVILEGE_KRNL, 7);
 	init_gate(INT_VECTOR_IRQ0 + 3,	hwint03,	PRIVILEGE_KRNL, 7);
