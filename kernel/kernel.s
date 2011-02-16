@@ -9,6 +9,7 @@ extern	idt_ptr
 extern	exception_handler
 extern	spurious_irq
 extern	p_proc_ready
+extern	clock_handler
 extern	disp_int
 extern	disp_str
 
@@ -262,11 +263,11 @@ hwint00:		; Interrupt routine for irq 0 (the clock).
 	inc ah
 	mov [gs:158], ax
 	
-	mov rdi, clock_int_msg
-	call disp_str
 
 	mov al, 0x20
 	out 0x20, al
+
+	call clock_handler
 
 	mov	rsp, [p_proc_ready]	
 	pop	rax
@@ -359,8 +360,6 @@ ALIGN	16
 hwint15:		; Interrupt routine for irq 15
 	hwint_slave	15
 
-[section .data]
-	clock_int_msg	db '^', 0
 
 [section .bss]
 	resb K_STACK_BYTES

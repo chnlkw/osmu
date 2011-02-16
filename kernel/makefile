@@ -9,7 +9,7 @@ CFLAGS	=	-c -fno-builtin -fno-stack-protector
 LDFLAGS	=	-s -z max-page-size=0x1000
 
 TARGET	=	kernel.bin
-OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o main.o global.o
+OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o main.o global.o clock.o
 
 AddrOfKernel	=	0x30000
 

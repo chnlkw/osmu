@@ -23,7 +23,7 @@ EXTERN	PROCESS	proc_table[NR_TASKS];
 
 EXTERN	t_8	task_stack[STACK_SIZE_TOTAL];
 
-EXTERN	t_64	p_proc_ready;
+EXTERN	PROCESS *p_proc_ready;
 
 extern	TASK	task_table[NR_TASKS];
 

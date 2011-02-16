@@ -1,35 +1,42 @@
+#include "const.h"
 #include "type.h"
 #include "proc.h"
 #include "protect64.h"
 #include "global.h"
-#include "const.h"
 
 void main()
 {
-	register PROCESS *rp;
+	register PROCESS	*p_proc;
+	register TASK		*p_task;
+	register t_64		stack_top;
+	register t_64		i;
+	register PROCESS	*rp;
+
 	disp_str("---- Welcome to OSMU! ----\n");
-	
-	rp = proc_table;
 
-	rp->ldt_sel=SELECTOR_LDT_H;
+	stack_top = (t_64)task_stack + STACK_SIZE_TOTAL;
 
-	init_sys_seg(gdt + LDT_INDEX, &rp->ldt, sizeof(rp->ldt) - 1, DESC_LDT_ACCESS);
-	init_CS(rp->ldt + CS_INDEX, 1);
-	init_DS(rp->ldt + GS_INDEX, GS_BASE_ADDR);
+	for(i = 0, p_proc = proc_table, p_task = task_table; i != NR_TASKS; i++, p_proc++, p_task++) 
+	{
 
-	rp->regs.cs = SELECTOR_CS | TI_LDT | RPL1;
-	rp->regs.gs = SELECTOR_GS | TI_LDT | RPL1;
-	rp->regs.fs = SELECTOR_DS ;
-	rp->regs.ss = SELECTOR_DS ;
-	rp->regs.rip = (t_64)proc_A;
-	rp->regs.rsp = (t_64)task_stack + STACK_SIZE_TOTAL;
-	rp->regs.rflags = DEFAULT_RFLAGS;
+		p_proc->ldt_sel=SELECTOR_LDT_H + i * 0x10;
 
-	p_proc_ready = (t_64)proc_table;
-//	disp_int(sizeof(REGS)+8);
-//	disp_str("\n");
-//	disp_int(proc_table);
-//	disp_str("\n");
+		init_sys_seg(gdt + LDT_INDEX + i, &p_proc->ldt, sizeof(p_proc->ldt) - 1, DESC_LDT_ACCESS);
+		init_CS(p_proc->ldt + CS_INDEX, 1);
+		init_DS(p_proc->ldt + GS_INDEX, GS_BASE_ADDR);
+
+		p_proc->regs.cs = SELECTOR_CS | TI_LDT | RPL1;
+		p_proc->regs.gs = SELECTOR_GS | TI_LDT | RPL1;
+		p_proc->regs.fs = SELECTOR_DS ;
+		p_proc->regs.ss = SELECTOR_DS ;
+		p_proc->regs.rflags = DEFAULT_RFLAGS;
+		p_proc->regs.rip = (t_64)p_task->entry;
+		p_proc->regs.rsp = stack_top;
+		stack_top -= p_task->stack_size;
+
+	}
+
+	p_proc_ready = proc_table;
 	restart();
 
 	while(1);
