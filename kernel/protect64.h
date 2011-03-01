@@ -3,17 +3,19 @@
 #define PROTECT_64_H
 
 #define	CS_INDEX	1
-#define	GS_INDEX	2
-#define LDT_SIZE	3
-#define	TSS_INDEX	3
-#define LDT_INDEX	4
+#define DS_INDEX	2
+#define	GS_INDEX	3
+#define LDT_SIZE	4
+#define	TSS_INDEX	4
+#define LDT_INDEX	5
 #define	GDT_SIZE	256
 
+#define SELECTOR_NULL	0x0
 #define SELECTOR_CS	0x10
-#define SELECTOR_DS	0x0
-#define SELECTOR_GS	0x20
-#define SELECTOR_TSS	0x30
-#define SELECTOR_LDT_H	0x40
+#define SELECTOR_SS	0x20
+#define SELECTOR_GS	0x30
+#define SELECTOR_TSS	0x40
+#define SELECTOR_LDT_H	0x50
 
 #define TI_LDT	4
 #define TI_GDT	0
@@ -60,6 +62,11 @@
 #define GATE_ACCESS	0x8E00
 
 #define DPL_SHIFT 5
+
+#define	DPL0	(0<<DPL_SHIFT)
+#define	DPL1	(1<<DPL_SHIFT)
+#define	DPL2	(2<<DPL_SHIFT)
+#define	DPL3	(3<<DPL_SHIFT)
 
 #define PRIVILEGE_KRNL	0
 #define PRIVILEGE_USER	3

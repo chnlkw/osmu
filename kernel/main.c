@@ -22,13 +22,14 @@ void main()
 		p_proc->ldt_sel=SELECTOR_LDT_H + i * 0x10;
 
 		init_sys_seg(gdt + LDT_INDEX + i, &p_proc->ldt, sizeof(p_proc->ldt) - 1, DESC_LDT_ACCESS);
-		init_CS(p_proc->ldt + CS_INDEX, 1);
-		init_DS(p_proc->ldt + GS_INDEX, GS_BASE_ADDR);
+		init_CS(p_proc->ldt + CS_INDEX, DPL1);
+		init_DS(p_proc->ldt + DS_INDEX, 0, DPL1);
+		init_DS(p_proc->ldt + GS_INDEX, GS_BASE_ADDR, DPL1);
 
 		p_proc->regs.cs = SELECTOR_CS | TI_LDT | RPL1;
 		p_proc->regs.gs = SELECTOR_GS | TI_LDT | RPL1;
-		p_proc->regs.fs = SELECTOR_DS ;
-		p_proc->regs.ss = SELECTOR_DS ;
+		p_proc->regs.fs = SELECTOR_NULL;
+		p_proc->regs.ss = SELECTOR_SS | TI_LDT | RPL1;
 		p_proc->regs.rflags = DEFAULT_RFLAGS;
 		p_proc->regs.rip = (t_64)p_task->entry;
 		p_proc->regs.rsp = stack_top;

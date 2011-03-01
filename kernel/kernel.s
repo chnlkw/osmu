@@ -69,13 +69,13 @@ _start:
 	lidt [idt_ptr]
 	mov ax, SELECTOR_TSS
 	ltr ax
-	mov ax, SELECTOR_DS
+	mov ax, SELECTOR_NULL
 	mov ds, ax
 	mov es, ax
 	mov fs, ax
 	mov ax, SELECTOR_GS
 	mov gs, ax
-	push SELECTOR_DS
+	push SELECTOR_NULL ;SS selector is NULL on CPL=0
 	push StackTop
 	pushf
 	push SELECTOR_CS
@@ -90,6 +90,8 @@ restart:
 	mov	rsp, [p_proc_ready]	
 	pop	rax
 	lldt	ax
+;	mov rdi, rax
+;	call disp_int
 	pop	rax
 	pop	rbx
 	pop	rcx
@@ -107,6 +109,14 @@ restart:
 	pop	r15
 	pop	fs
 	pop	gs
+;	mov rdi, [rsp]
+;	call disp_int
+;	mov rdi, [rsp+8]
+;	call disp_int
+;	mov rdi, [rsp+16]
+;	call disp_int
+;	mov rdi, [rsp+24]
+;	call disp_int
 	iretq
 
 	

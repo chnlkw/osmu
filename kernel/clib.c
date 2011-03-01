@@ -36,6 +36,6 @@ void delay(t_64 t)
 	int i;
 	while(t-->0)
 	{
-		for(i=0;i<1000000;i++);
+		for(i=0;i<50000000;i++);
 	}
 }

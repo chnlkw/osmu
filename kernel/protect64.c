@@ -42,15 +42,15 @@ void hwint15();
 desc_ptr gdt_ptr;
 desc_ptr idt_ptr;
 
-void init_CS(DESCRIPTOR *desc, int priv)
+void init_CS(DESCRIPTOR *desc, int dpl)
 {
-	desc->access = DESC_CODE_ACCESS | (priv<<DPL_SHIFT);
+	desc->access = DESC_CODE_ACCESS | dpl;
 	desc->limit_2 = DESC_CODE_64;
 }
 
-void init_DS(DESCRIPTOR *desc, t_64 base)
+void init_DS(DESCRIPTOR *desc, t_64 base, t_8 dpl)
 {
-	desc->access = DESC_DATA_ACCESS | (3 << DPL_SHIFT); //Page Access Only
+	desc->access = DESC_DATA_ACCESS | (dpl & (3<<DPL_SHIFT) ); //Page Access Only
 	desc->base_1 = base & 0xFFFF;
 	desc->base_2 = (base >> 16) & 0xFF;
 	desc->base_3 = (base >> 24) & 0xFF;
@@ -72,8 +72,9 @@ void init_gdt()
 {
 	gdt_ptr[0]=sizeof gdt;
 	*(t_64*)(gdt_ptr + 1) = (t_64)&gdt;
-	init_CS(gdt + CS_INDEX, 0);
-	init_DS(gdt + GS_INDEX, GS_BASE_ADDR);
+	init_CS(gdt + CS_INDEX, DPL0);
+	init_DS(gdt + DS_INDEX, 0, DPL0);
+	init_DS(gdt + GS_INDEX, GS_BASE_ADDR, DPL0);
 	init_sys_seg(gdt + TSS_INDEX, (t_64)&tss + 4, sizeof(TSS) - 1, DESC_TSS_ACCESS);
 	tss.rsp0=ADDR_RSP0;
 	tss.rsp1=ADDR_RSP1;
@@ -121,7 +122,6 @@ void init_idt()
 	init_gate(INT_VECTOR_ALIGN_FAULT,	align_fault,		PRIVILEGE_KRNL, 1);
 	init_gate(INT_VECTOR_MACHINE_NOT,	machine_abort,		PRIVILEGE_KRNL, 1);
 	init_gate(INT_VECTOR_SIMD_FAULT	,	simd_fault,		PRIVILEGE_KRNL, 1);
-
 
 	init_gate(INT_VECTOR_IRQ0 + 0,	hwint00,	PRIVILEGE_KRNL, 2);
 	init_gate(INT_VECTOR_IRQ0 + 1,	hwint01,	PRIVILEGE_KRNL, 7);
