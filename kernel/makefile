@@ -6,7 +6,7 @@ ASFLAGS	=	-f elf64
 CC	=	gcc
 CFLAGS	=	-c -fno-builtin -fno-stack-protector
 
-LDFLAGS	=	-s -z max-page-size=0x1000
+LDFLAGS	=	-z max-page-size=0x1000 #-s
 
 TARGET	=	kernel.bin
 OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o main.o global.o clock.o

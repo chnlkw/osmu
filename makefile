@@ -25,6 +25,8 @@ clean	:
 	${MAKE} clean -C kernel
 debug	:
 	bochs -f boch.bxrc
+#	qemu -S -kernel kernel/kernel.bin -fda osmu.img 
+	
 
 run		:
 	virtualbox --startvm Lkwix

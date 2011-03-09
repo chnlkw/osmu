@@ -82,7 +82,14 @@ _start:
 	push cs_init
 	iretq
 cs_init:
-	sti
+
+;=========Debug for IST address===============
+
+;	int 0
+;=============================================
+
+
+;	sti
 	jmp main
 	hlt
 
@@ -123,6 +130,7 @@ restart:
 ;exception handelers
 
 divide_error:
+int 1
 	mov rdi, 0
 	mov rsi, NON_ERR_CODE
 	jmp exception
@@ -231,7 +239,7 @@ exception:
 %endmacro
 
 
-ALIGN	16
+ALIGN	8
 hwint00:		; Interrupt routine for irq 0 (the clock).
 	mov rsp, [p_proc_ready]
 	add rsp, REGS_TOP - 5*8

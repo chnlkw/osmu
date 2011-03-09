@@ -119,7 +119,6 @@ SetPTE:
 	add edi, 4
 	loop .LoopPTE
 	
-mov edi, 160*16+ 40
 ;CR4.PAE=1
 	mov eax, cr4
 	or eax, 1<<5

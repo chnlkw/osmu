@@ -38,6 +38,8 @@ void main()
 	}
 
 	p_proc_ready = proc_table;
+	disp_int(proc_table);
+//	while(1);
 	restart();
 
 	while(1);
@@ -63,6 +65,6 @@ void proc_B()
 		disp_str("B");
 		disp_int(i++);
 		disp_str(";");
-		delay(1);
+		delay(3);
 	}
 }
