@@ -17,11 +17,11 @@ ${TARGET}	:	boot/boot.bin ${BuiltinFiles}
 	sudo umount $(MntPos)
 	sudo rm -rf $(MntPos)
 
+.PHONY : clean debug makesubdir	
+
 makesubdir	:
 	${MAKE} -C boot
 	${MAKE} -C kernel
-
-.PHONY : clean debug
 
 clean	:
 	-rm ${TARGET}
@@ -32,6 +32,5 @@ debug	: ${TARGET}
 #	${QEMU} -S -s -fda $< &
 	gnome-terminal -e "gdb "
 	
-
 run		:
 	virtualbox --startvm Lkwix
