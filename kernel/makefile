@@ -4,9 +4,9 @@ AS	=	nasm
 ASFLAGS	=	-f elf64
 
 CC	=	gcc
-CFLAGS	=	-c -fno-builtin -fno-stack-protector
+CFLAGS	=	-c -fno-builtin -fno-stack-protector -g
 
-LDFLAGS	=	-z max-page-size=0x1000 #-s
+LDFLAGS	=	-z max-page-size=0x1000 -m elf_x86_64 #-s
 
 TARGET	=	kernel.bin
 OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o main.o global.o clock.o

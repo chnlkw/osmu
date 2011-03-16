@@ -1,6 +1,9 @@
 MntPos=/tmp/osmu_img
 BuiltinFiles=boot/loader.bin kernel/kernel.bin
 TARGET=osmu.img
+KERNEL=kernel/kernel.bin
+
+QEMU=qemu-system-x86_64
 
 #all : lkwix.img
 all	: makesubdir ${TARGET}
@@ -19,13 +22,15 @@ makesubdir	:
 	${MAKE} -C kernel
 
 .PHONY : clean debug
+
 clean	:
 	-rm ${TARGET}
 	${MAKE} clean -C boot
 	${MAKE} clean -C kernel
-debug	:
-	bochs -f boch.bxrc
-#	qemu -S -kernel kernel/kernel.bin -fda osmu.img 
+
+debug	: ${TARGET}
+#	${QEMU} -S -s -fda $< &
+	gnome-terminal -e "gdb "
 	
 
 run		:
