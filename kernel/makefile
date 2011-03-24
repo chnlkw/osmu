@@ -1,7 +1,7 @@
 #Makefile for Kernel
 
 AS	=	nasm
-ASFLAGS	=	-f elf64
+ASFLAGS	=	-f elf64 -g
 
 CC	=	gcc
 CFLAGS	=	-c -fno-builtin -fno-stack-protector -g
@@ -36,6 +36,9 @@ protect64.o	: protect64.c type.h i8259.h protect64.h global.h const.h proc.h
 start.o		: start.c type.h protect64.h
 
 global.o	: global.h
+
+asmlib.o	: asmlib.s
+	as --64 $< -o $@ -g
 
 clean :
 	-rm ${OBJ} ${TARGET}

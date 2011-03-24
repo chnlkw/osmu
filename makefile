@@ -6,9 +6,9 @@ KERNEL=kernel/kernel.bin
 QEMU=qemu-system-x86_64
 
 #all : lkwix.img
-all	: makesubdir ${TARGET}
+all	: ${TARGET}
 
-${TARGET}	:	boot/boot.bin ${BuiltinFiles} 
+${TARGET}	:	makesubdir boot/boot.bin ${BuiltinFiles} 
 	dd if=boot/boot.bin of=${TARGET} bs=512 count=1
 	dd if=/dev/zero of=${TARGET} seek=1 bs=512 count=2879
 	sudo mkdir -p $(MntPos)
@@ -30,7 +30,8 @@ clean	:
 
 debug	: ${TARGET}
 #	${QEMU} -S -s -fda $< &
-	gnome-terminal -e "gdb "
+	gnome-terminal -e "gdb --quiet"
 	
-run		:
-	virtualbox --startvm Lkwix
+run	: ${TARGET}
+#	virtualbox --startvm Lkwix
+	${QEMU} -fda $<

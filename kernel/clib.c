@@ -1,5 +1,17 @@
 #include "type.h"
 
+t_8 inb(t_port port)
+{
+	t_8 data;
+	asm volatile ("inb %1, %0" : "=a" (data) : "d" (port) );
+	return data;
+}
+
+t_8 outb(t_port port, t_8 data)
+{
+	asm volatile ("outb %0, %1" : : "a" (data), "d" (port) );
+}
+
 void itoa(char *str, t_64 num)
 {
 	char *p=str;

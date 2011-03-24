@@ -130,7 +130,6 @@ restart:
 ;exception handelers
 
 divide_error:
-int 1
 	mov rdi, 0
 	mov rsi, NON_ERR_CODE
 	jmp exception

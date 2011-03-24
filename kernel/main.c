@@ -38,7 +38,7 @@ void main()
 	}
 
 	p_proc_ready = proc_table;
-	disp_int(proc_table);
+//	disp_int(proc_table);
 //	while(1);
 	restart();
 

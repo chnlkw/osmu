@@ -15,6 +15,8 @@
 
 #endif
 
+EXTERN	t_32		disp_pos;
+
 EXTERN	DESCRIPTOR	gdt[GDT_SIZE];
 EXTERN	GATE		idt[IDT_SIZE];
 EXTERN	TSS		tss;
