@@ -109,6 +109,9 @@ typedef struct s_gate
 
 typedef t_16 desc_ptr[5];
 
+desc_ptr gdt_ptr;
+desc_ptr idt_ptr;
+
 typedef struct s_tss
 {
 	t_64	rev1;

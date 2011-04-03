@@ -4,7 +4,7 @@ AS	=	nasm
 ASFLAGS	=	-f elf64 -g
 
 CC	=	gcc
-CFLAGS	=	-c -fno-builtin -fno-stack-protector -g
+CFLAGS	=	-c -fno-builtin -fno-stack-protector -g -nostdinc
 
 LDFLAGS	=	-z max-page-size=0x1000 -m elf_x86_64 #-s
 

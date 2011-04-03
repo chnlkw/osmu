@@ -4,6 +4,8 @@
 #include "protect64.h"
 #include "global.h"
 
+//PROCESS *p_proc_ready;
+
 void main()
 {
 	register PROCESS	*p_proc;
@@ -38,7 +40,9 @@ void main()
 	}
 
 	p_proc_ready = proc_table;
-//	disp_int(proc_table);
+	disp_int(proc_table);
+	disp_int(&proc_table);
+	disp_int(p_proc_ready);
 //	while(1);
 	restart();
 

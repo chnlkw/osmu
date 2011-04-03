@@ -57,7 +57,7 @@ REGS_TOP	equ	23*8
 
 [section .text]
 
-_start:
+_start1:
 	mov rsp, StackTop
 	mov rbp, rsp
 ;	mov ah, 0Fh

@@ -39,8 +39,6 @@ void hwint13();
 void hwint14();
 void hwint15();
 
-desc_ptr gdt_ptr;
-desc_ptr idt_ptr;
 
 void init_CS(DESCRIPTOR *desc, int dpl)
 {
