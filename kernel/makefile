@@ -11,7 +11,7 @@ LDFLAGS	=	-z max-page-size=0x1000 -m elf_x86_64 #-s
 TARGET	=	kernel.bin
 OBJ	=	kernel.o start.o protect64.o asmlib.o i8259.o clib.o main.o global.o clock.o
 
-AddrOfKernel	=	0x30000
+AddrOfKernel	=	0x200000
 
 #vpath %.h	../include/
 
