@@ -143,6 +143,10 @@ PMstart:
 	
 	call DispMemInfo
 
+mov esi, 0fee00030h
+mov eax, [esi]
+call DispEAX
+
 	call Prepare64
 	mov ax, SelectorRW64
 	mov ss, ax

@@ -33,5 +33,5 @@ debug	: ${TARGET}
 	gnome-terminal -e "gdb --quiet"
 	
 run	: ${TARGET}
-#	virtualbox --startvm Lkwix
-	${QEMU} -fda $<
+	virtualbox --startvm osmu
+#	${QEMU} -fda $<

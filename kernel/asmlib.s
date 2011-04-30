@@ -1,11 +1,23 @@
 .globl in_byte
 .globl out_byte
 .globl disp_str
+.globl get_cpuid
+.globl rdmsr
+.globl memcpy
 
 .equ disp_line, 160
 
-//disp_pos:
-//	.long	0
+disp_pos:
+	.long	0
+
+memcpy:
+	pushf
+	cld
+	mov %edx, %ecx
+	rep movsb 
+	popf
+	ret
+
 /*
 in_byte:
 	mov %di, %dx
@@ -51,4 +63,25 @@ disp_enter:
 	jmp disp_str_loop
 disp_str_end:
 	movl %ebx, (disp_pos)
+	ret
+
+get_cpuid:
+	push %rcx
+	push %rdx
+	push %rsi
+	mov %edi, %eax
+	cpuid
+	pop %rdi
+	mov %ebx, (%edi)
+	pop %rdi
+	mov %ecx, (%edi)
+	pop %rdi
+	mov %edx, (%edi)
+	ret
+
+rdmsr:
+	mov %edi, %ecx
+	rdmsr
+	shlq $32, %rdx
+	or %rdx, %rax
 	ret
