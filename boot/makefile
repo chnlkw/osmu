@@ -1,19 +1,33 @@
 #Makefile for boot
 
-ASM			=	nasm
-ASMFLAGS	=	-I include/
 
-BOOTFILE	=	boot.bin loader.bin
+CC	=	cc
+CFLAGS	=	-c -fno-builtin -fno-stack-protector -nostdinc
+
+LD	=	ld
+LDFLAGS	=	
+
+BootLoader=boot
+
+OBJ	=	bootasm.o bootc.o
 
 vpath %	include/
 
-all	:	${BOOTFILE}
+all	:	${BootLoader}
 
-boot.bin :	boot.asm addr.inc fat12head.inc fat12ctl.asm
-	${ASM} ${ASMFLAGS} -o $@ $<
+boot	:	bootasm.o bootc.o
+	ld -Ttext 0x7c00 -o $@ bootasm.o bootc.o
+	objdump -S $@.o > $@.asm
+	objcopy -O binary $@
 
-loader.bin :	loader.asm addr.inc fat12head.inc pm.inc fat12ctl.asm lib32.asm
-	${ASM} ${ASMFLAGS} -o $@ $<
+bootasm.o	:	bootasm.S pm.h  
+	${CC} -c $< 
+
+loader	:	loader.o
+	ld -Ttext 0x7c00 -o $@ $@.o
+	objdump -S $@.o > $@.asm
+	objcopy -O binary $@
+
 
 clean :
-	-rm -r ${BOOTFILE}
+	-rm -r ${BootLoader} ${OBJ}

@@ -1,6 +1,11 @@
+ImageSize=1 # in Mbytes
+
+
 MntPos=/tmp/osmu_img
-BuiltinFiles=boot/loader.bin kernel/kernel.bin
+BootBlock=boot/boot
+BuiltinFiles=boot/loader kernel/kernel.bin
 TARGET=osmu.img
+SRCIMG=ext2.img
 KERNEL=kernel/kernel.bin
 
 QEMU=qemu-system-x86_64
@@ -8,14 +13,18 @@ QEMU=qemu-system-x86_64
 #all : lkwix.img
 all	: ${TARGET}
 
-${TARGET}	:	makesubdir boot/boot.bin ${BuiltinFiles} 
-	dd if=boot/boot.bin of=${TARGET} bs=512 count=1
-	dd if=/dev/zero of=${TARGET} seek=1 bs=512 count=2879
+${TARGET}	:	makesubdir ${BootBlock} ${BuiltinFiles} ${SRCIMG}
+	dd if=${BootBlock} of=${TARGET} bs=1K count=1
+	dd if=${SRCIMG} of=${TARGET} skip=1 seek=1 bs=1K
 	sudo mkdir -p $(MntPos)
-	sudo mount -o loop -t msdos -o loop ${TARGET} $(MntPos)
+	sudo mount -o loop -t ext2 ${TARGET} $(MntPos)
 	-sudo cp $(BuiltinFiles) $(MntPos)
 	sudo umount $(MntPos)
 	sudo rm -rf $(MntPos)
+
+ext2.img	:	
+	dd if=/dev/zero of=$@ bs=1M count=${ImageSize}
+	yes | mke2fs -c $@
 
 .PHONY : clean debug makesubdir	
 
@@ -24,7 +33,7 @@ makesubdir	:
 	${MAKE} -C kernel
 
 clean	:
-	-rm ${TARGET}
+	-rm ${TARGET} ${SRCIMG}
 	${MAKE} clean -C boot
 	${MAKE} clean -C kernel
 
@@ -35,3 +44,4 @@ debug	: ${TARGET}
 run	: ${TARGET}
 	virtualbox --startvm osmu
 #	${QEMU} -fda $<
+
