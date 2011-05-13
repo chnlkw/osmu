@@ -40,9 +40,43 @@ pm_code:
 	mov %ax, %es
 	mov %ax, %fs
 	mov %ax, %gs
+//	call readsect
 _loop:
 	incw %ds:(0xb8000)
 	jmp _loop
+/*
+readsect: 
+	push %bp
+	mov %sp, %bp
+	mov $0x1F7, %dx
+_waitdisk:
+	inb %dx, %al
+	test %al, 0x40
+	jne _waitdisk
+
+	mov $0x1F2, %dx
+	mov (%bp+12), %ax
+	outb %al, %dx
+
+	inc dx
+	mov (%bp+4), %ax
+	outb %al, %dx
+
+	inc dx
+	shr $8, %ax
+	outb %al, %dx
+
+	inc dx
+	shr $8, %ax
+	outb %al, %dx
+
+	inc dx
+	shr $8, %ax
+	or $0xE0, %al
+	outb %al, %dx
+*/
+	ret
+
 
 .p2align 2
 
@@ -55,6 +89,6 @@ gdt_ptr:
 	.long	gdt
 
 
-.space	510 - ( . - _start )
+//.space	510 - ( . - _start )
 
-.word	0xaa55
+//.word	0xaa55

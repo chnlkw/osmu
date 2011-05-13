@@ -7,7 +7,7 @@ CFLAGS	=	-c -fno-builtin -fno-stack-protector -nostdinc
 LD	=	ld
 LDFLAGS	=	
 
-BootLoader=boot
+BootLoader=boot loader
 
 OBJ	=	bootasm.o bootc.o
 
@@ -17,8 +17,9 @@ all	:	${BootLoader}
 
 boot	:	bootasm.o bootc.o
 	ld -Ttext 0x7c00 -o $@ bootasm.o bootc.o
-	objdump -S $@.o > $@.asm
+	objdump -S $@ > $@.asm
 	objcopy -O binary $@
+	./add_magic.sh boot
 
 bootasm.o	:	bootasm.S pm.h  
 	${CC} -c $< 
