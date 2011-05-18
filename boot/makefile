@@ -37,6 +37,9 @@ loader	:	loaderasm.o loaderc.o
 
 loaderasm.o	:	loaderasm.S
 	${CC} -c -m32 $< 
+
+loaderc.o	:	loaderc.c string.h
+	${CC} ${CFLAGS} $< 
 	
 clean :
 	-rm -r ${TARGET} ${BootLoader} ${OBJ}
