@@ -47,61 +47,6 @@ pm_code:
 	mov %ax, %fs
 	mov %ax, %gs
 	jmp cstart
-/*
-inb:
-	mov 0x4(%esp), %dx
-	xor %eax, %eax
-	inb %dx, %al
-	ret
-
-outb:
-	mov 0x8(%esp), %eax
-	mov 0x4(%esp), %edx
-	outb %al, %dx
-	ret
-
-insl:
-	mov 0x12(%esp), %ecx
-	mov 0x4(%esp), %dx
-	mov 0x8(%esp), %edi
-	repnz insl %dx, %es:(%edi)
-	ret
-*/
-disp_str:
-	movl (disp_pos), %ebx	
-disp_str_loop:
-	mov $0, %al
-	cmpb %al, (%edi)
-	je disp_str_end
-	mov $10, %al
-	cmp (%edi), %al
-	je disp_enter
-	mov (%edi), %al
-	mov $0x0F, %ah
-	mov %ax, %gs:(%ebx)
-	inc %ebx
-	inc %ebx
-	inc %edi
-	jmp disp_str_loop
-disp_enter:
-	mov %ebx,%eax
-	mov $disp_line, %ebx
-	mov $0, %edx
-	div %ebx
-	inc %eax
-	mul %ebx
-	mov %eax, %ebx
-	inc %edi
-	jmp disp_str_loop
-disp_str_end:
-	movl %ebx, (disp_pos)
-	ret
-
-sleep:
-	incw (0xb8000)
-	incw (0xb8002)
-	jmp sleep
-	ret
 
 .p2align 2
 
