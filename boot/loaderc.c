@@ -1,0 +1,4 @@
+void cmain()
+{
+	sleep();
+}

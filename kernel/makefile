@@ -1,5 +1,7 @@
 #Makefile for Kernel
 
+INCDIRS	=	../include
+
 #AS	=	nasm
 #ASFLAGS	=	-f elf64 -g
 
@@ -7,16 +9,18 @@ AS	=	as
 ASFLAGS	=	-g #--64
 
 CC	=	gcc
-CFLAGS	=	-c -fno-builtin -fno-stack-protector -g -nostdinc
+CFLAGS	=	-c -fno-builtin -fno-stack-protector -g -nostdinc -I ${INCDIRS}
 
 LDFLAGS	=	-z max-page-size=0x1000 -m elf_x86_64 #-s
 
 TARGET	=	kernel.bin
 OBJ	=	kernel.o start.o asmlib.o clib.o mp.o #protect64.o i8259.o main.o global.o clock.o
 
+INCDIRS	=	../include
+
 AddrOfKernel	=	0x200000
 
-#vpath %.h	../include/
+vpath %	../include/
 
 all	:	kernel.bin
 

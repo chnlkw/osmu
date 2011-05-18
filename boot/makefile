@@ -1,34 +1,42 @@
 #Makefile for boot
 
+INCDIRS	=	../include include
 
 CC	=	cc
-CFLAGS	=	-c -fno-builtin -fno-stack-protector -nostdinc
+CFLAGS	=	-c -fno-builtin -fno-stack-protector -nostdinc -m32 -I ${INCDIRS} -O1
 
 LD	=	ld
-LDFLAGS	=	
+LDFLAGS	=	-melf_i386	
+
+TARGET	=	bootblock
 
 BootLoader=boot loader
 
-OBJ	=	bootasm.o bootc.o
+OBJ	=	*.o
 
-vpath %	include/
+vpath %	${incdirs}
 
-all	:	${BootLoader}
+all	:	${TARGET}
+
+${TARGET}	:	boot loader
+	cat boot loader > bootblock
 
 boot	:	bootasm.o bootc.o
-	ld -Ttext 0x7c00 -o $@ bootasm.o bootc.o
+	${LD} -Ttext 0x7c00 -o $@ bootasm.o bootc.o ${LDFLAGS}
 	objdump -S $@ > $@.asm
 	objcopy -O binary $@
 	./add_magic.sh boot
 
 bootasm.o	:	bootasm.S pm.h  
-	${CC} -c $< 
+	${CC} -c -m32 $< 
 
-loader	:	loader.o
-	ld -Ttext 0x7c00 -o $@ $@.o
-	objdump -S $@.o > $@.asm
+loader	:	loaderasm.o loaderc.o
+	${LD} -Ttext 0x7e00 -o $@ loaderasm.o loaderc.o ${LDFLAGS}
+	objdump -S $@ > $@.asm
 	objcopy -O binary $@
 
-
+loaderasm.o	:	loaderasm.S
+	${CC} -c -m32 $< 
+	
 clean :
-	-rm -r ${BootLoader} ${OBJ}
+	-rm -r ${TARGET} ${BootLoader} ${OBJ}

@@ -2,8 +2,8 @@ ImageSize=1 # in Mbytes
 
 
 MntPos=/tmp/osmu_img
-BootBlock=boot/boot
-BuiltinFiles=boot/loader kernel/kernel.bin
+BootBlock=boot/bootblock
+BuiltinFiles=kernel/kernel.bin #boot/loader 
 TARGET=osmu.img
 SRCIMG=ext2.img
 KERNEL=kernel/kernel.bin
