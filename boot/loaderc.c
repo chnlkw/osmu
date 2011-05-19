@@ -14,14 +14,19 @@
 #define EXT2_SUPER_MAGIC	0xEF53
 #define	INODE_SIZE		sizeof( struct ext2_inode)
 
-t_32	inode_table_off;
-t_32	block_size;
+void read_inode(struct ext2_inode *p, t_32 num)	__attribute__ ((section("loader.text")));
+void read_data(struct ext2_inode *p, void* dst) __attribute__ ((section("loader.text")));
+void cmain()					__attribute__ ((section("loader.text")));
 
-void read_inode(struct ext2_inode *p, t_32 num)
+t_32	inode_table_off				__attribute__ ((section("loader.data"))) = 0;
+t_32	block_size				__attribute__ ((section("loader.data"))) = 0;
+
+
+void read_inode(struct ext2_inode *p, t_32 num) 
 {
 	read(p, inode_table_off + (num - 1) * INODE_SIZE, INODE_SIZE);
 }
-/*
+
 void read_data(struct ext2_inode *p, void* dst)
 {
 	register int i;
@@ -31,7 +36,7 @@ void read_data(struct ext2_inode *p, void* dst)
 		dst += block_size;
 	}
 }
-*/
+
 void cmain()
 {
 #ifdef DEBUG
@@ -48,8 +53,7 @@ void cmain()
 	block_size = 1024 << sb.s_log_block_size;
 	inode_table_off = bg.bg_inode_table * block_size;
 	read_inode(&inode, EXT2_ROOT_INO);
-//	read_data(&inode, ADDR_OF_KERNEL);
-//	while(inode.i_mode | 0x4000);
+	read_data(&inode, ADDR_OF_KERNEL);
 #ifdef DEBUG
 	disp_str("Done.\n");
 #endif

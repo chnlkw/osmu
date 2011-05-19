@@ -2,12 +2,12 @@
 
 .code32
 
-.text
+.section loader.head
 
-.globl _start
+//.globl _start
 
 start:
-_start:
+//_start:
 	mov _start, %sp
 	cli
 	cld
