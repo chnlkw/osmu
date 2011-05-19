@@ -8,6 +8,9 @@
 
 start:
 _start:
+	mov _start, %sp
+	cli
+	cld
 	jmp cmain
 
 .globl sleep

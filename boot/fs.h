@@ -2,6 +2,8 @@
 
 #define _FILE_SYSTEM_H_
 
+#include "type.h"
+
 #define SECTSIZE 512
 
 //code from xv6
@@ -32,7 +34,7 @@ static inline void waitdisk()
 	while((inb(0x1F7)&0xC0)!=0x40);
 }
 
-void readsect(void *dst, t_32 offset)
+void readsect(void *dst, t_32 offset)	// 512Bytes per sect
 {
 	// Issue command.
 	waitdisk();
@@ -48,4 +50,20 @@ void readsect(void *dst, t_32 offset)
 	insl(0x1F0, dst, SECTSIZE>>2);
 }
 
+void read(void *dst, t_32 offset, t_32 count)
+{
+	char buf[512], *cur = dst;
+	register t_32 sect = offset >> 9;
+	register t_32 i;
+	readsect(buf, sect);
+	for(i = offset - (sect << 9); count > 0; i++, count--, cur++)
+	{
+		if(i == 512)
+		{
+			readsect(buf, ++sect);
+			i=0;
+		}
+		*cur = buf[i];
+	}
+}
 #endif
