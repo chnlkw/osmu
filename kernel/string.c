@@ -1,12 +1,8 @@
-#include "type.h"
+#include "string.h"
 
-#ifndef _STRING_H_
-
-#define _STRING_H_
-
-#define CHAR_PER_LINE	80
 
 t_32	disp_pos = 0;
+
 void disp_str(char *str)
 {
 	t_16 *gs=(void*)0xb8000;
@@ -51,4 +47,3 @@ void disp_int(t_32 num)
 	disp_str(str);
 }
 
-#endif

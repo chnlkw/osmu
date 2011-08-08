@@ -5,8 +5,8 @@
 
 void cstart()
 {
-	register void (*entry) (void) = (void(*)(void))(ADDR_OF_LOADER);
-	readsect(ADDR_OF_LOADER, 1);
+	register void (*entry) () = (void(*) () ) ADDR_OF_LOADER ;
+	readsect( (void *)ADDR_OF_LOADER, 1);
 	entry();
 	while(1);
 }

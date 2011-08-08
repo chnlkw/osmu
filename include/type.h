@@ -2,6 +2,8 @@
 
 #define _OSMU_TYPE_H_
 
+#pragma pack ()
+
 typedef unsigned long long	t_64;
 typedef unsigned int		t_32;
 typedef unsigned short		t_16;

@@ -18,7 +18,7 @@ inline void waitdisk();
 
 void readsect(void *dst, t_32 offset);	// 512Bytes per sect
 
-void read(void *dst, t_32 offset, t_32 count)__attribute__ ((section("loader.text")));
+void read(void *dst, t_32 offset, t_32 count)
 ;
 
 #endif

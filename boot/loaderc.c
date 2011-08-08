@@ -1,26 +1,26 @@
 #include "fs.h"
 #include "ext2_fs.h"
 
-#ifdef DEBUG
-
-#include "string.h"
-
-#endif
 
 #define ADDR_OF_KERNEL		0x100000
 
 #define EXT2_SB_OFF		0x400
 #define EXT2_BG_OFF		0x800
 #define EXT2_SUPER_MAGIC	0xEF53
-#define	INODE_SIZE		sizeof( struct ext2_inode)
+#define	INODE_SIZE		sizeof ( struct ext2_inode )
 
 void read_inode(struct ext2_inode *p, t_32 num)	__attribute__ ((section("loader.text")));
 void read_data(struct ext2_inode *p, void* dst) __attribute__ ((section("loader.text")));
 void cmain()					__attribute__ ((section("loader.text")));
 
-t_32	inode_table_off				__attribute__ ((section("loader.data"))) = 0;
-t_32	block_size				__attribute__ ((section("loader.data"))) = 0;
+t_32	inode_table_off				__attribute__ ((section("loader.data")));
+t_32	block_size				__attribute__ ((section("loader.data")));
+struct ext2_dir_entry_2	*dir			__attribute__ ((section("loader.data")));
+extern	char	kern_name[]			__attribute__ ((section("loader.data"))); 
 
+
+char kern_name[]="kernel.bin";
+#define KERNEL_NAME_LEN 10
 
 void read_inode(struct ext2_inode *p, t_32 num) 
 {
@@ -39,25 +39,20 @@ void read_data(struct ext2_inode *p, void* dst)
 
 void cmain()
 {
-#ifdef DEBUG
-	disp_str("Loading....\n");
-#endif
+	register void (*kern_entry) () = (void(*) ()) ADDR_OF_KERNEL;
 	struct ext2_super_block sb;
 	struct ext2_group_desc	bg;
 	struct ext2_inode	inode;
+
 	read(&sb, EXT2_SB_OFF, sizeof sb);
 	read(&bg, EXT2_BG_OFF, sizeof bg);
 	
-//	while(sb.s_magic != EXT2_SUPER_MAGIC);
-
 	block_size = 1024 << sb.s_log_block_size;
 	inode_table_off = bg.bg_inode_table * block_size;
-	read_inode(&inode, EXT2_ROOT_INO);
-	read_data(&inode, ADDR_OF_KERNEL);
-#ifdef DEBUG
-	disp_str("Done.\n");
-#endif
-	sleep();
-	while(1);
+
+	read_inode(&inode, EXT2_BOOT_LOADER_INO);
+	read_data(&inode, (void *)ADDR_OF_KERNEL);
+
+	kern_entry();
 }
 

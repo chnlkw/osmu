@@ -7,17 +7,15 @@
 .globl	_start
 
 .globl	disp_str
-.globl	inb
-.globl	outb
-.globl	insl
-.globl	sleep
 
 .text
+
 .code16
 
 _start:
 	cli
 	cld
+
 	mov %cs, %ax
 	mov %ax, %ds
 	mov %ax, %es
@@ -50,9 +48,6 @@ pm_code:
 
 .p2align 2
 
-disp_pos:	.long	0
-.equ disp_line, 160
-
 gdt:		SEG_NULL
 gdt_code:	SEG_CODE
 gdt_data:	SEG_DATA
@@ -60,4 +55,3 @@ gdt_data:	SEG_DATA
 gdt_ptr:
 	.word	. - gdt
 	.long	gdt
-

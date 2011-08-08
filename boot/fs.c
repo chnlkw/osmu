@@ -2,23 +2,23 @@
 
 inline char inb(short port)
 {
-  char data;
-  asm volatile("in %1,%0" : "=a" (data) : "d" (port));
-  return data;
+	char data;
+	asm volatile("in %1,%0" : "=a" (data) : "d" (port));
+	return data;
 }
 
 inline void outb(short port, char data)
 {
-  asm volatile("out %0,%1" : : "a" (data), "d" (port));
+	asm volatile("out %0,%1" : : "a" (data), "d" (port));
 }
 
 
 inline void insl(int port, void *addr, int cnt)
 {
-  asm volatile("cld\n\trepne\n\tinsl"     :
-                   "=D" (addr), "=c" (cnt)    :
-                   "d" (port), "0" (addr), "1" (cnt)  :
-                   "memory", "cc");
+	asm volatile("cld\n\trepne\n\tinsl"
+			:	"=D" (addr), "=c" (cnt)
+			:	"d" (port), "0" (addr), "1" (cnt)
+			:	"memory", "cc");
 }
 
 inline void waitdisk()

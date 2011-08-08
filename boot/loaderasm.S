@@ -4,11 +4,8 @@
 
 .section loader.head
 
-//.globl _start
-
 start:
-//_start:
-	mov _start, %sp
+	mov start, %sp
 	cli
 	cld
 	jmp cmain
