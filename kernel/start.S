@@ -5,6 +5,7 @@
 .global sleep2
 
 .extern cmain
+.extern	kernel_stack
 
 .text
 
@@ -13,7 +14,7 @@
 _start:
 	cli
 	cld
-	movl $KERNEL_STACK_TOP, %esp
+	movl $(kernel_stack + KERNEL_STACK_SIZE), %esp
 #	call a2
 #a2:
 #	pop %eax

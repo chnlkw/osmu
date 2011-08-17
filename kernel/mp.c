@@ -6,6 +6,7 @@
 void AP_START_CODE();
 void AP_START_CODE_END();
 
+extern volatile u8 lock;
 void init_mp()
 {
 	register u32 bb,i;
@@ -23,4 +24,20 @@ void init_mp()
 	apic_write(APIC_ICR_L, bb);
 	for(i=0;i<=1000000;i++);
 	apic_write(APIC_ICR_L, bb);
+}
+
+void ap_start()
+{
+	register u32 ap_num, cur=0;
+	ap_num = apic_read(APIC_ID) >> 24;
+while(1)	
+{
+	disp_str("AP ");
+	disp_int(ap_num);
+	disp_str(":");
+	disp_int(cur);
+	cur++;
+	disp_str("\n");
+}	
+	//while(1);
 }

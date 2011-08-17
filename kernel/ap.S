@@ -7,8 +7,10 @@
 .global AP_START_CODE
 .global	AP_START_CODE_END
 
-.extern ap_start
-.extern sleep2
+#.extern ap_start
+#.extern sleep2
+#.extern disp_int
+#.extern	kern_stack
 
 .text
 
@@ -46,10 +48,26 @@ pm_code:
 	mov %ax, %es
 	mov %ax, %fs
 	mov %ax, %gs
-	mov $0x201000, %sp
-	incw (0xB8002)
+
+#GET APIC_ID
+	mov (0xFEE00020), %eax
+#CALC AP StackTop
+	shrl $24, %eax
+	inc %eax
+	mov $KERNEL_STACK_SIZE, %ecx
+	mull %ecx
+	add $kernel_stack, %eax
+#SET SP
+	mov %eax, %esp
+
+#	mov $0x201000, %esp
+#	push %eax
+#	mov $disp_int, %eax
+#	call *%eax
+
+	incw (0xB8000)
 	mov $ap_start, %eax
-	call %eax
+	call *%eax
 	hlt
 
 .p2align 4

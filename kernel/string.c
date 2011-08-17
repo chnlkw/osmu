@@ -16,7 +16,7 @@ void disp_str(char *str)
 		str++;
 		if(disp_pos >= CHAR_PER_LINE * LINE_PER_SCREEN)	
 		{
-			for(p=gs,q=gs+CHAR_PER_LINE;q<gs+disp_pos;p++,q++)
+			for(p=gs,q=gs+CHAR_PER_LINE; q < gs + CHAR_PER_LINE * LINE_PER_SCREEN; p++,q++)
 				*p=*q;
 			for(;p<q;p++)*p=0x0;
 			disp_pos -= CHAR_PER_LINE;
