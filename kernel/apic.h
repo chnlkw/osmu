@@ -10,14 +10,14 @@
 #define APIC_ICR_L	0x300
 #define APIC_ICR_H	0x310
 
-static inline t_32 apic_read(t_32 reg)
+static inline u32 apic_read(u32 reg)
 {
-        return *((volatile t_32 *)(APIC_BASE_ADDR + reg));
+        return *((volatile u32 *)(APIC_BASE_ADDR + reg));
 }
 
-static inline void apic_write(t_32 reg, t_32 val)
+static inline void apic_write(u32 reg, u32 val)
 {
-        *((volatile t_32 *)(APIC_BASE_ADDR + reg)) = val;
+        *((volatile u32 *)(APIC_BASE_ADDR + reg)) = val;
 }
 
 #endif

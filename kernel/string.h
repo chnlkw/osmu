@@ -5,13 +5,16 @@
 #define _STRING_H_
 
 #define CHAR_PER_LINE	80
+#define LINE_PER_SCREEN	25
 
-extern	t_32	disp_pos __attribute__ ((section("loader.data")));
+extern	u32	disp_pos;
 
-void disp_str(char *str)__attribute__ ((section("loader.text")));
+void disp_str(char*);
 
-void itoa(char *str, t_32 num)__attribute__ ((section("loader.text")));
+void itoa(char*, u32);
 
-void disp_int(t_32 num)__attribute__ ((section("loader.text")));
+void disp_int(u32);
+
+void memcpy(char*, char*, u32);
 
 #endif

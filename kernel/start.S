@@ -2,11 +2,9 @@
 
 .global _start
 .global sleep
-.global AP_START_CODE
-.global	AP_START_CODE_END
+.global sleep2
 
 .extern cmain
-
 
 .text
 
@@ -16,9 +14,13 @@ _start:
 	cli
 	cld
 	movl $KERNEL_STACK_TOP, %esp
-	movl $0x1B, %ecx
-	rdmsr
-	jmp cmain
+#	call a2
+#a2:
+#	pop %eax
+#	movl $(sleep - a2) , %ecx
+#	addl %ecx, %eax
+
+	call cmain
 	hlt
 
 sleep:
@@ -26,15 +28,8 @@ sleep:
 	jmp sleep
 	ret
 
-.code16
-AP_START_CODE:
-	cli
-	cld
-	movw $0xb800, %ax
-	movw %ax, %gs
-	incw %gs:0x0
-	jmp .
-	jmp AP_START_CODE
-AP_START_CODE_END:
+sleep2:
+	incw (0xB8070)
+	jmp sleep
+	ret
 
-.string "aaaaa"

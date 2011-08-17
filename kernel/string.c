@@ -1,22 +1,30 @@
+#include "type.h"
 #include "string.h"
 
-
-t_32	disp_pos = 0;
+u32	disp_pos = 0;
 
 void disp_str(char *str)
 {
-	t_16 *gs=(void*)0xb8000;
+	register u16 *gs=(void*)0xB8000;
+	register u16 *p,*q;
 	while(*str)
 	{
 		if(*str=='\n')
 			disp_pos=(disp_pos / CHAR_PER_LINE + 1) * CHAR_PER_LINE;
 		else
-			gs[disp_pos++]=*str | 0x0f00;
+			gs[disp_pos++]=*str | 0x0F00;
 		str++;
+		if(disp_pos >= CHAR_PER_LINE * LINE_PER_SCREEN)	
+		{
+			for(p=gs,q=gs+CHAR_PER_LINE;q<gs+disp_pos;p++,q++)
+				*p=*q;
+			for(;p<q;p++)*p=0x0;
+			disp_pos -= CHAR_PER_LINE;
+		}
 	}
 }
 
-void itoa(char *str, t_32 num)
+void itoa(char *str, u32 num)
 {
 	char *p=str;
 	char ch;
@@ -40,10 +48,16 @@ void itoa(char *str, t_32 num)
 	*p='\0';
 }
 
-void disp_int(t_32 num)
+void disp_int(u32 num)
 {
 	char str[20];
 	itoa(str, num);
 	disp_str(str);
 }
+
+void memcpy(char *dst, char *src, u32 cnt)
+{
+	while(cnt--) *dst++ = *src++;
+}
+
 
