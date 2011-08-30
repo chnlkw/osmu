@@ -65,8 +65,9 @@ pm_code:
 #	mov $disp_int, %eax
 #	call *%eax
 
-	incw (0xB8000)
-	mov $ap_start, %eax
+#	incw (0xB8000)
+#	mov $ap_start, %eax
+	mov $init64, %eax
 	call *%eax
 	hlt
 

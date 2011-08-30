@@ -3,10 +3,13 @@
 
 .global _start
 .global sleep
-.global sleep2
+.global sleep64
+.global init64
 
 .extern cmain
 .extern	kernel_stack
+
+.global lock
 
 .set	sel_code32,	0x08	
 .set	sel_code64,	0x10	
@@ -27,17 +30,12 @@ _start:
 #	pop %eax
 #	movl $(sleep - a2) , %ecx
 #	addl %ecx, %eax
-	call init64
-	call cmain
+	jmp init64
+#	call cmain
 	hlt
 
 sleep:
 	incw (0xB8050)
-	jmp sleep
-	ret
-
-sleep2:
-	incw (0xB8070)
 	jmp sleep
 	ret
 
@@ -71,14 +69,24 @@ init64:
 
 	lgdt gdt_ptr
 	ljmp $sel_code64, $start64
+
+	hlt
 #	leave
 #	ret
 
 .code64
 start64:
 	incw (0xb8000)
+	call cmain
+	hlt
 	jmp start64
+
+sleep64:
+	incw (0xB8090)
+	jmp sleep64
+	ret
 .data
+
 
 .p2align 2
 
@@ -93,3 +101,5 @@ gdt_ptr:
 	.word	. - gdt
 	.long	gdt
 	.long	0x0
+
+lock: .byte 0

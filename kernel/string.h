@@ -11,10 +11,10 @@ extern	u32	disp_pos;
 
 void disp_str(char*);
 
-void itoa(char*, u32);
+void itoa(char*, u64);
 
-void disp_int(u32);
+void disp_int(u64);
 
-void memcpy(char*, char*, u32);
+void memcpy(char*, char*, u64);
 
 #endif

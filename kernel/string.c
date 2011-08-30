@@ -24,13 +24,13 @@ void disp_str(char *str)
 	}
 }
 
-void itoa(char *str, u32 num)
+void itoa(char *str, u64 num)
 {
 	char *p=str;
 	char ch;
 	int i, flag=0;
-	*p++='0';
-	*p++='x';
+//	*p++='0';
+//	*p++='x';
 	for(i=28;i>=0;i-=4)
 	{
 		ch=((num>>i)&0xF);
@@ -48,14 +48,14 @@ void itoa(char *str, u32 num)
 	*p='\0';
 }
 
-void disp_int(u32 num)
+void disp_int(u64 num)
 {
 	char str[20];
 	itoa(str, num);
 	disp_str(str);
 }
 
-void memcpy(char *dst, char *src, u32 cnt)
+void memcpy(char *dst, char *src, u64 cnt)
 {
 	while(cnt--) *dst++ = *src++;
 }
