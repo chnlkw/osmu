@@ -5,4 +5,4 @@ CFLAGS	=	-l ext2fs -g
 all : addloader
 
 clean :
-	rm addloader
+	rm -rf addloader

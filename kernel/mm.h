@@ -29,7 +29,7 @@ struct page_table
 
 typedef struct page_table PT;
 
-extern	PT	PT_flat;
+extern	PT	pt_flat;
 
 extern	u8	kernel_stack[MAX_CPU_AMOUNT][KERNEL_STACK_SIZE];
 

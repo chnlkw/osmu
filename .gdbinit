@@ -1,7 +1,7 @@
 #gdbinit for qemu
 
-file kernel/kernel.o
 #file boot/bl.o
-target remote | exec qemu-system-x86_64 -gdb stdio -hda osmu.img -boot once=c -smp 8 -m 128M
-#break _start
-continue
+target remote | exec qemu-system-x86_64 -gdb stdio -hda osmu.img -boot once=c -smp 8 -m 128M 
+#continue
+file kernel/kernel.o
+break start64

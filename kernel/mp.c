@@ -30,7 +30,7 @@ void ap_start()
 {
 	register u32 ap_num, cur=0;
 	ap_num = apic_read(APIC_ID) >> 24;
-while(1)	
+//while(1)	
 {
 	disp_str("AP ");
 	disp_int(ap_num);
