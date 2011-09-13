@@ -24,6 +24,7 @@ _start:
 	mov $0xb800, %ax
 	mov %ax, %gs
 
+
 	inb $0x92, %al
 	orb $2, %al
 	outb %al, $0x92
@@ -44,6 +45,8 @@ pm_code:
 	mov %ax, %es
 	mov %ax, %fs
 	mov %ax, %gs
+	mov %ax, %ss
+	mov $AddrOfBoot, %esp
 	jmp cstart
 
 .p2align 2

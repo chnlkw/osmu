@@ -48,6 +48,7 @@ pm_code:
 	mov %ax, %es
 	mov %ax, %fs
 	mov %ax, %gs
+	mov %ax, %ss
 
 #GET APIC_ID
 	mov (0xFEE00020), %eax
@@ -61,7 +62,7 @@ pm_code:
 	mov %eax, %esp
 
 #	mov $0x201000, %esp
-#	push %eax
+#	eush %eax
 #	mov $disp_int, %eax
 #	call *%eax
 

@@ -31,7 +31,7 @@ ap.o	:	ap.S pm.h
 
 mm.o	:	mm.h
 
-mm32.o	:	mm32.h mm.h
+mm32.o	:	mm32.c mm32.h mm.h
 	${CC} mm32.c -c -fno-builtin -fno-stack-protector -nostdinc -m32 -g
 	objcopy -O elf64-x86-64 mm32.o
 

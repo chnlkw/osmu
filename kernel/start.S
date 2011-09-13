@@ -8,6 +8,8 @@
 
 .extern cmain
 .extern	kernel_stack
+.extern reg
+.extern reg2
 
 .global lock
 
@@ -48,7 +50,9 @@ init64:
 	mov %eax, %cr0
 
 	sub $0x4, %esp
-	movl $0x102000, (%esp)
+	movl $0x102000, %eax
+	movl %eax, (%esp)
+#	movl $0x102000, (%esp)
 	call mm_fill_page_table_32
 
 	mov %cr4, %eax
@@ -76,7 +80,6 @@ init64:
 
 .code64
 start64:
-	incw (0xb8000)
 	call cmain
 	hlt
 	jmp start64

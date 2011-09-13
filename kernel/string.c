@@ -1,7 +1,7 @@
 #include "type.h"
 #include "string.h"
 
-u32	disp_pos = 0;
+volatile u32	disp_pos = 0;
 
 void disp_str(char *str)
 {

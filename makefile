@@ -9,10 +9,12 @@ OSMU	=	osmu.img
 SRCIMG	=	ext2.img
 KERNEL	=	kernel/kernel.bin
 ADDLOADER	=	addloader/addloader 
+TARGET	=	${OSMU}
+VDI	=	osmu.vdi
+VDI_H	=	osmu.vdi.head
 
 QEMU=qemu-system-x86_64
 
-#all : lkwix.img
 all	: ${OSMU}
 
 ${OSMU}	:	makesubdir ${BootBlock} ${BuiltinFiles} ${SRCIMG}
@@ -26,7 +28,7 @@ ${OSMU}	:	makesubdir ${BootBlock} ${BuiltinFiles} ${SRCIMG}
 	${ADDLOADER} ${OSMU} kernel.bin
 
 ext2.img	:	
-	dd if=/dev/zero of=$@ bs=1M count=${ImageSize}
+	dd if=/dev/zero of=$@ bs=4M count=${ImageSize}
 	yes | mke2fs -c $@
 
 .PHONY : clean debug makesubdir	
@@ -37,16 +39,18 @@ makesubdir	:
 	${MAKE} -C addloader
 
 clean	:
-	-rm ${TARGET} ${SRCIMG} ${OSMU}
+	-rm ${SRCIMG} ${OSMU}
 	${MAKE} clean -C boot
 	${MAKE} clean -C kernel
 	${MAKE} clean -C addloader
 
-debug	: ${TARGET}
+debug	: ${OSMU}
 #	${QEMU} -S -s -fda $< &
 	gnome-terminal -e "gdb --quiet"
 	
-run	: ${TARGET}
-	virtualbox --startvm osmu
-#	${QEMU} -fda $<
+${VDI}	:	${VDI_H} ${OSMU}
+	cat ${VDI_H} ${OSMU} > ${VDI}
+
+run	: ${VDI}
+	virtualbox --startvm osmu --dbg
 

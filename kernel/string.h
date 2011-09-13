@@ -7,7 +7,7 @@
 #define CHAR_PER_LINE	80
 #define LINE_PER_SCREEN	25
 
-extern	u32	disp_pos;
+extern volatile	u32	disp_pos;
 
 void disp_str(char*);
 
